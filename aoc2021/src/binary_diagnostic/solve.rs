@@ -120,7 +120,7 @@ fn parse_input(file_path: &str) -> Vec<u32> {
     let contents = fs::read_to_string(file_path).expect("Input file local to project");
 
     let result: Vec<u32> = contents
-        .split('\n')
+        .lines()
         .filter(|s| !s.is_empty())
         .map(|s| u32::from_str_radix(s, 2).unwrap())
         .collect();

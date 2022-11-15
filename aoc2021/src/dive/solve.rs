@@ -64,7 +64,7 @@ fn parse_input(file_path: &str) -> Vec<String> {
     let contents = fs::read_to_string(file_path).expect("Input file local to project");
 
     let result: Vec<String> = contents
-        .split('\n')
+        .lines()
         .filter(|s| !s.is_empty())
         .map(String::from)
         .collect();
