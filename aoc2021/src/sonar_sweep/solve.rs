@@ -15,7 +15,7 @@ pub fn solve_first_star() -> u32 {
         prev_depth = depth;
     }
 
-    return result;
+    result
 }
 
 
@@ -38,7 +38,7 @@ pub fn solve_second_star() -> u32 {
         prev_avg_depth = new_avg_depth;
     }
 
-    return result;
+    result
 }
 
 
@@ -51,7 +51,7 @@ fn parse_input(file_path: &str) -> Vec<u64> {
         .map(|x| x.parse::<u64>().unwrap())
         .collect();
 
-    return result;
+    result
 }
 
 

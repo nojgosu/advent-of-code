@@ -44,7 +44,7 @@ pub fn solve_first_star() -> u32 {
     // use mask to ensure only first 12 bits set after inverting gamma rate
     epsilon_rate &= 0x00000FFF;
 
-    return gamma_rate * epsilon_rate;
+    gamma_rate * epsilon_rate
 }
 
 
@@ -55,7 +55,7 @@ pub fn solve_second_star() -> u32 {
 
     let co2_scrub_rating = life_support_diagnostic_extractor(&diagnostic, false);
 
-    return oxygen_gen_rating*co2_scrub_rating;
+    oxygen_gen_rating*co2_scrub_rating
 }
 
 fn life_support_diagnostic_extractor(diagnostic: &Vec<u32>, oxygen_rating: bool) -> u32 {
@@ -125,7 +125,7 @@ fn parse_input(file_path: &str) -> Vec<u32> {
         .map(|s| u32::from_str_radix(s, 2).unwrap())
         .collect();
 
-    return result;
+    result
 }
 
 

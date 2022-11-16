@@ -56,7 +56,7 @@ pub fn solve_second_star() -> i32 {
         }
     }
 
-    return distance * depth;
+    distance * depth
 }
 
 
@@ -69,7 +69,7 @@ fn parse_input(file_path: &str) -> Vec<String> {
         .map(String::from)
         .collect();
 
-    return result;
+    result
 }
 
 
