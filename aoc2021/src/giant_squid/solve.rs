@@ -164,6 +164,6 @@ mod tests {
     #[test]
     fn solved() {
         assert_eq!(10374, solve_first_star());
-        assert_eq!(00, solve_second_star());
+        assert_eq!(24742, solve_second_star());
     }
 }
