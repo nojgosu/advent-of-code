@@ -6,6 +6,8 @@ use crate::hydrothermal_venture::hydrothermal_venture_solution;
 use crate::lanternfish::lanternfish_solution;
 use crate::treachery_of_whales::treachery_of_whales_solution;
 use crate::seven_segment_search::seven_segment_search_solution;
+use crate::smoke_basin::smoke_basin_solution;
+use crate::syntax_scoring::syntax_scoring_solution;
 
 mod sonar_sweep;
 mod dive;
@@ -15,6 +17,8 @@ mod hydrothermal_venture;
 mod lanternfish;
 mod treachery_of_whales;
 mod seven_segment_search;
+mod smoke_basin;
+mod syntax_scoring;
 
 fn main() {
     println!("*** Advent of Code 2021 ***");
@@ -26,6 +30,8 @@ fn main() {
     lanternfish_solution();
     treachery_of_whales_solution();
     seven_segment_search_solution();
+    smoke_basin_solution();
+    syntax_scoring_solution();
 
 }
 

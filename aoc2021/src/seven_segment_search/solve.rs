@@ -1,7 +1,6 @@
 use std::collections::HashSet;
 use std::fs;
 use std::ops::Index;
-use std::panic::resume_unwind;
 use itertools::Itertools;
 
 
@@ -65,6 +64,7 @@ fn decode_reading(reading: String, decoding_key: Vec<String>) -> u32 {
     let mut number = Vec::<u32>::new();
 
     for reading in screen_readout.iter() {
+        // Sort reading ascending so it matches the order in the decoding_key for string comparison
         let digit_wiring = reading.chars().sorted().collect::<String>();
 
 
@@ -94,7 +94,7 @@ fn decode_reading(reading: String, decoding_key: Vec<String>) -> u32 {
     number.iter().fold(0, |acc, elem| acc * 10 + elem)
 }
 
-//let (tr, t, tl, m, br, bl, b) = decode_segment_wiring(&item);
+
 fn decode_segment_wiring(reading: &String) -> Vec<String> {
     // Create hashset for each of the segment and initialise with full spread of chars
     let segment_wiring = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
@@ -218,7 +218,7 @@ fn decode_segment_wiring(reading: &String) -> Vec<String> {
     let bl = bottom_left_segment.drain().next().unwrap();
     let b = bottom_segment.drain().next().unwrap();
 
-    // construct numbers using the decoded segment wiring, sort and cast as a String
+    // construct numbers using the decoded segment wiring, sort ascending and cast as a String
     let zero = vec![t, tl, tr, br, bl, b].into_iter().sorted().collect::<String>();
     let one = vec![tr, br].into_iter().sorted().collect::<String>();
     let two = vec![t, tr, m, bl, b].into_iter().sorted().collect::<String>();
@@ -230,6 +230,7 @@ fn decode_segment_wiring(reading: &String) -> Vec<String> {
     let eight = vec![t, tl, tr, m, br, bl, b].into_iter().sorted().collect::<String>();
     let nine = vec![t, tl, tr, m, br, b].into_iter().sorted().collect::<String>();
 
+    // construct decoding key as a vector from 0 -> 9 in that order.
     let decoding_key = vec![zero, one, two, three, four, five, six, seven, eight, nine];
 
     decoding_key
