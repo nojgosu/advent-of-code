@@ -18,7 +18,7 @@ pub fn solve_second_star() -> u64 {
 }
 
 fn simulate_population(population: &mut Vec<Lanternfish>, generations: u32) {
-    for i in 0..generations {
+    for _ in 0..generations {
         let mut spawn = Vec::<Lanternfish>::new();
 
         population
@@ -29,11 +29,11 @@ fn simulate_population(population: &mut Vec<Lanternfish>, generations: u32) {
     }
 }
 
-//TODO: Optimise
+
 fn simulate_population_optimised(initial_population: Vec<Lanternfish>, generations: u32) -> LanternfishPopulation {
     let mut population = LanternfishPopulation::new(initial_population);
 
-    for i in 0..generations {
+    for _ in 0..generations {
         population.breed();
     }
 

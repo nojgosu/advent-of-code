@@ -8,6 +8,7 @@ use crate::treachery_of_whales::treachery_of_whales_solution;
 use crate::seven_segment_search::seven_segment_search_solution;
 use crate::smoke_basin::smoke_basin_solution;
 use crate::syntax_scoring::syntax_scoring_solution;
+use crate::dumbo_octopus::dumbo_octopus_solution;
 
 mod sonar_sweep;
 mod dive;
@@ -19,6 +20,7 @@ mod treachery_of_whales;
 mod seven_segment_search;
 mod smoke_basin;
 mod syntax_scoring;
+mod dumbo_octopus;
 
 fn main() {
     println!("*** Advent of Code 2021 ***");
@@ -32,6 +34,7 @@ fn main() {
     seven_segment_search_solution();
     smoke_basin_solution();
     syntax_scoring_solution();
+    dumbo_octopus_solution();
 
 }
 
