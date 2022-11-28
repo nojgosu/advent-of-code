@@ -1,9 +1,9 @@
-use crate::dumbo_octopus::solve::{solve_first_star, solve_second_star};
+use crate::passage_pathing::solve::{solve_first_star, solve_second_star};
 
 mod solve;
 
-pub fn dumbo_octopus_solution() {
-    println!("--- Day 11: Dumbo Octopus ---");
+pub fn passage_pathing_solution() {
+    println!("--- Day 12: Passage Pathing ---");
     let result = solve_first_star();
     println!("\t1st Star Solution = {}", result);
 

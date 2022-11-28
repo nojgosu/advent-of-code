@@ -68,8 +68,6 @@ fn flash_octopii(octopii: &mut Array2<u32>, flash_map: &mut Array2<bool>, flash_
 
     let (height, width) = octopii.dim();
 
-    //println!("height = {:?}\twidth = {:?}", height, width);
-
     // maintain flash impacts to update later
     let mut flash_energy = octopii.map(|_| 0u32);
 

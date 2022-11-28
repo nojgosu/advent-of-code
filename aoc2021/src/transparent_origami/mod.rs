@@ -1,9 +1,9 @@
-use crate::dumbo_octopus::solve::{solve_first_star, solve_second_star};
+use crate::transparent_origami::solve::{solve_first_star, solve_second_star};
 
 mod solve;
 
-pub fn dumbo_octopus_solution() {
-    println!("--- Day 11: Dumbo Octopus ---");
+pub fn transparent_origami_solution() {
+    println!("--- Day 13: Transparent Origami ---");
     let result = solve_first_star();
     println!("\t1st Star Solution = {}", result);
 
