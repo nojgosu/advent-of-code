@@ -11,6 +11,7 @@ use crate::syntax_scoring::syntax_scoring_solution;
 use crate::dumbo_octopus::dumbo_octopus_solution;
 use crate::passage_pathing::passage_pathing_solution;
 use crate::transparent_origami::transparent_origami_solution;
+use crate::extended_polymerization::extended_polymerization_solution;
 
 mod sonar_sweep;
 mod dive;
@@ -25,6 +26,7 @@ mod syntax_scoring;
 mod dumbo_octopus;
 mod passage_pathing;
 mod transparent_origami;
+mod extended_polymerization;
 
 fn main() {
     println!("*** Advent of Code 2021 ***");
@@ -41,6 +43,7 @@ fn main() {
     dumbo_octopus_solution();
     passage_pathing_solution();
     transparent_origami_solution();
+    extended_polymerization_solution();
 
 }
 
