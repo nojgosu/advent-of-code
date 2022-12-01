@@ -12,6 +12,7 @@ use crate::dumbo_octopus::dumbo_octopus_solution;
 use crate::passage_pathing::passage_pathing_solution;
 use crate::transparent_origami::transparent_origami_solution;
 use crate::extended_polymerization::extended_polymerization_solution;
+use crate::chiton::chiton_solution;
 
 mod sonar_sweep;
 mod dive;
@@ -27,6 +28,7 @@ mod dumbo_octopus;
 mod passage_pathing;
 mod transparent_origami;
 mod extended_polymerization;
+mod chiton;
 
 fn main() {
     println!("*** Advent of Code 2021 ***");
@@ -44,6 +46,7 @@ fn main() {
     passage_pathing_solution();
     transparent_origami_solution();
     extended_polymerization_solution();
+    chiton_solution();
 
 }
 
