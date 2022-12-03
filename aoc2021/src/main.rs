@@ -1,3 +1,5 @@
+extern crate core;
+
 use crate::sonar_sweep::sonar_sweep_solution;
 use crate::dive::dive_solution;
 use crate::binary_diagnostic::binary_diagnostic_solution;
@@ -13,6 +15,7 @@ use crate::passage_pathing::passage_pathing_solution;
 use crate::transparent_origami::transparent_origami_solution;
 use crate::extended_polymerization::extended_polymerization_solution;
 use crate::chiton::chiton_solution;
+use crate::packet_decoder::packet_decoder_solution;
 
 mod sonar_sweep;
 mod dive;
@@ -29,6 +32,7 @@ mod passage_pathing;
 mod transparent_origami;
 mod extended_polymerization;
 mod chiton;
+mod packet_decoder;
 
 fn main() {
     println!("*** Advent of Code 2021 ***");
@@ -47,6 +51,7 @@ fn main() {
     transparent_origami_solution();
     extended_polymerization_solution();
     chiton_solution();
+    packet_decoder_solution();
 
 }
 

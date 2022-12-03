@@ -168,7 +168,7 @@ mod tests {
     fn test_poylmerise_hash() {
         let (template, rules) = parse_input("src/extended_polymerization/test_input.txt");
 
-        let mut polymer = init_polymer_hashmap(template);
+        let polymer = init_polymer_hashmap(template);
 
         let polymer = hash_polymerise(polymer, &rules);
         assert_eq!(init_polymer_hashmap("NCNBCHB".to_string()), polymer);
