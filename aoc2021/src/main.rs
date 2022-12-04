@@ -16,6 +16,7 @@ use crate::transparent_origami::transparent_origami_solution;
 use crate::extended_polymerization::extended_polymerization_solution;
 use crate::chiton::chiton_solution;
 use crate::packet_decoder::packet_decoder_solution;
+use crate::trick_shot::trick_shot_solution;
 
 mod sonar_sweep;
 mod dive;
@@ -33,6 +34,7 @@ mod transparent_origami;
 mod extended_polymerization;
 mod chiton;
 mod packet_decoder;
+mod trick_shot;
 
 fn main() {
     println!("*** Advent of Code 2021 ***");
@@ -52,6 +54,7 @@ fn main() {
     extended_polymerization_solution();
     chiton_solution();
     packet_decoder_solution();
+    trick_shot_solution();
 
 }
 
