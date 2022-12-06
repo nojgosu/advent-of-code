@@ -3,12 +3,14 @@ use crate::rock_paper_scissors::rock_paper_scissors_solution;
 use crate::rucksack_reorganisation::rucksack_reorganisation_solution;
 use crate::camp_cleanup::camp_cleanup_solution;
 use crate::supply_stacks::supply_stacks_solution;
+use crate::tuning_trouble::tuning_trouble_solution;
 
 mod calorie_counting;
 mod rock_paper_scissors;
 mod rucksack_reorganisation;
 mod camp_cleanup;
 mod supply_stacks;
+mod tuning_trouble;
 
 
 fn main() {
@@ -18,5 +20,6 @@ fn main() {
     rucksack_reorganisation_solution();
     camp_cleanup_solution();
     supply_stacks_solution();
+    tuning_trouble_solution();
 
 }
