@@ -60,18 +60,16 @@ fn calculate_disk_usage(commands: String) -> HashMap<String, usize> {
                     pwd.push(dir);
                 }
             }
-            Directory(name) => {}
+            Directory(_) => {}
             File(_, _, size) => {
                 // add size to directory listing in pwd
                 let all_paths = enumerate_paths(&pwd);
 
                 all_paths.iter().for_each(|dir| {
                     *paths.entry(dir.to_string()).or_insert(0) += size;
-                    //*dir_size += size;
                 });
             }
             ListCommand => {}
-            _ => {}
         }
     }
     paths

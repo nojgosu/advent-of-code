@@ -6,6 +6,7 @@ use crate::supply_stacks::supply_stacks_solution;
 use crate::tuning_trouble::tuning_trouble_solution;
 use crate::no_space_left::no_space_left_solution;
 use crate::treetop_tree_house::treetop_tree_house_solution;
+use crate::rope_bridge::rope_bridge_solution;
 
 mod calorie_counting;
 mod rock_paper_scissors;
@@ -15,6 +16,7 @@ mod supply_stacks;
 mod tuning_trouble;
 mod no_space_left;
 mod treetop_tree_house;
+mod rope_bridge;
 
 
 fn main() {
@@ -26,6 +28,7 @@ fn main() {
     supply_stacks_solution();
     tuning_trouble_solution();
     no_space_left_solution();
-
+    treetop_tree_house_solution();
+    rope_bridge_solution();
 
 }
