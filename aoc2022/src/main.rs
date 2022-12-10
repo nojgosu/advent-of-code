@@ -7,6 +7,7 @@ use crate::tuning_trouble::tuning_trouble_solution;
 use crate::no_space_left::no_space_left_solution;
 use crate::treetop_tree_house::treetop_tree_house_solution;
 use crate::rope_bridge::rope_bridge_solution;
+use crate::cathode_ray_tube::cathode_ray_tube_solution;
 
 mod calorie_counting;
 mod rock_paper_scissors;
@@ -17,6 +18,7 @@ mod tuning_trouble;
 mod no_space_left;
 mod treetop_tree_house;
 mod rope_bridge;
+mod cathode_ray_tube;
 
 
 fn main() {
@@ -30,5 +32,6 @@ fn main() {
     no_space_left_solution();
     treetop_tree_house_solution();
     rope_bridge_solution();
+    cathode_ray_tube_solution();
 
 }
