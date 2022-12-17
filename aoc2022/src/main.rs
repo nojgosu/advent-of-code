@@ -8,6 +8,10 @@ use crate::no_space_left::no_space_left_solution;
 use crate::treetop_tree_house::treetop_tree_house_solution;
 use crate::rope_bridge::rope_bridge_solution;
 use crate::cathode_ray_tube::cathode_ray_tube_solution;
+use crate::monkey_in_the_middle::monkey_in_the_middle_solution;
+use crate::hill_climbing::hill_climbing_solution;
+use crate::distress_signal::distress_signal_solution;
+
 
 mod calorie_counting;
 mod rock_paper_scissors;
@@ -19,6 +23,9 @@ mod no_space_left;
 mod treetop_tree_house;
 mod rope_bridge;
 mod cathode_ray_tube;
+mod monkey_in_the_middle;
+mod hill_climbing;
+mod distress_signal;
 
 
 fn main() {
@@ -33,5 +40,8 @@ fn main() {
     treetop_tree_house_solution();
     rope_bridge_solution();
     cathode_ray_tube_solution();
+    monkey_in_the_middle_solution();
+    hill_climbing_solution();
+    distress_signal_solution();
 
 }

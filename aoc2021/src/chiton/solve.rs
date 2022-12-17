@@ -126,7 +126,7 @@ fn parse_large_input(file_path: &str) -> (Graph<(), u32, Directed>, NodeIndex, N
 
 fn construct_large_cave_data(contents: String) -> ArrayBase<OwnedRepr<u32>, Ix2> {
 // process input file data into an Array to support construction of graph
-    let width = contents.lines().count();
+    let width = contents.lines().next().unwrap().chars().count();
 
     let mut grid = Array2::<u32>::zeros((0, width));
 

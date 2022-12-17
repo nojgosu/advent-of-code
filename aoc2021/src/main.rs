@@ -17,6 +17,7 @@ use crate::extended_polymerization::extended_polymerization_solution;
 use crate::chiton::chiton_solution;
 use crate::packet_decoder::packet_decoder_solution;
 use crate::trick_shot::trick_shot_solution;
+use crate::snailfish::snailfish_solution;
 
 mod sonar_sweep;
 mod dive;
@@ -35,6 +36,7 @@ mod extended_polymerization;
 mod chiton;
 mod packet_decoder;
 mod trick_shot;
+mod snailfish;
 
 fn main() {
     println!("*** Advent of Code 2021 ***");
@@ -55,6 +57,7 @@ fn main() {
     chiton_solution();
     packet_decoder_solution();
     trick_shot_solution();
+    snailfish_solution();
 
 }
 

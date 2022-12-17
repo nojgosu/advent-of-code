@@ -94,7 +94,7 @@ fn run_simulation(x_dot_init: &i32, y_dot_init: &i32) -> (i32, ObjectiveStatus) 
 
     let mut status = ObjectiveStatus::Incomplete;
 
-    while check_objective(x, y, x_dot, y_dot) == ObjectiveStatus::Incomplete {
+    while status == ObjectiveStatus::Incomplete {
         (x, y, x_dot, y_dot) = particle_simulation_step(x, y, x_dot, y_dot);
 
         max_y = max_y.max(y);
@@ -144,7 +144,7 @@ fn check_objective(x: i32, y: i32, x_dot: i32, y_dot: i32) -> ObjectiveStatus {
     let x_min = x_objective.clone().min().unwrap();
     let x_max = x_objective.clone().max().unwrap();
 
-    // check if objective is impossible - this is incorrect
+    // check if objective is impossible
     if x_dot.is_negative() && x < x_min { return ObjectiveStatus::Impossible; }
     if x_dot.is_positive() && x > x_max { return ObjectiveStatus::Impossible; }
     if x_dot == 0 && !x_objective.contains(&x) { return ObjectiveStatus::Impossible; }

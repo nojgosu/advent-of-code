@@ -204,6 +204,6 @@ mod tests {
             }
         }
 
-        assert_eq!(13140, result.iter().sum())
+        assert_eq!(13140, result.iter().sum::<i32>())
     }
 }
