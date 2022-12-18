@@ -1,10 +1,11 @@
 use std::fs;
 use std::ops::{IndexMut};
-use nom::bytes::complete::tag;
-use nom::character::complete::{digit1, space0};
+use nom::branch::alt;
+use nom::bytes::complete::{tag};
+use nom::character::complete::{alpha1, digit1, space0};
 use nom::combinator::{map_res};
 use nom::IResult;
-use nom::sequence::{tuple};
+use nom::sequence::{delimited, preceded, tuple};
 
 
 pub fn solve_first_star() -> String {
@@ -98,6 +99,42 @@ fn parse_usize(input: &str) -> IResult<&str, usize> {
     map_res(digit1, str::parse)(input)
 }
 
+fn parse_char(input: &str) -> IResult<&str, char> { map_res(alpha1, str::parse)(input) }
+
+fn parse_crate(input: &str) -> IResult<&str, Option<char>> {
+    let (rest, crate_char) = delimited(tag("["), parse_char, tag("]"))(input)?;
+
+    Ok((rest, Some(crate_char)))
+}
+
+fn parse_gap(input: &str) -> IResult<&str, Option<char>> {
+    let (rest, _) = tag("   ")(input)?;
+
+    Ok((rest, None))
+}
+
+
+fn parse_supply_row(input: &str) -> IResult<&str, Vec<Option<char>>> {
+    let mut result = Vec::<Option<char>>::new();
+    let mut remaining = input;
+
+    let mut parser = alt((
+        preceded(tag(" "), parse_gap),
+        parse_crate,
+        parse_gap,
+        preceded(tag(" "), parse_crate),
+    ));
+
+    while !remaining.is_empty() {
+        let (rest, supply) = parser(remaining)?;
+
+        remaining = rest;
+
+        result.push(supply);
+    }
+
+    Ok((remaining, result))
+}
 
 #[derive(Debug, PartialEq)]
 struct Instruction {
@@ -110,21 +147,28 @@ struct Instruction {
 fn parse_input(file_path: &str) -> (Vec<Vec<char>>, Vec<Instruction>) {
     let contents = fs::read_to_string(file_path).expect("Input file local to project");
 
-    let mut stacks = Vec::<Vec<char>>::new();
+    let mut supply_rows = Vec::<Vec<Option<char>>>::new();
     let mut instructions = Vec::<Instruction>::new();
 
+    // Parse supply stacks
+    for line in contents.lines().take(8) {
+        if let Ok((rest, supply_row)) = parse_supply_row(line) {
+            supply_rows.push(supply_row);
+        } else {
+            panic!("Error parsing supply rows")
+        }
+    }
 
-    // Initialise stacks
-    stacks.push(vec!['B', 'W', 'N']);
-    stacks.push(vec!['L', 'Z', 'S', 'P', 'T', 'D', 'M', 'B']);
-    stacks.push(vec!['Q', 'H', 'Z', 'W', 'R']);
-    stacks.push(vec!['W', 'D', 'V', 'J', 'Z', 'R']);
-    stacks.push(vec!['S', 'H', 'M', 'B']);
-    stacks.push(vec!['L', 'G', 'N', 'J', 'H', 'V', 'P', 'B']);
-    stacks.push(vec!['J', 'Q', 'Z', 'F', 'H', 'D', 'L', 'S']);
-    stacks.push(vec!['W', 'S', 'F', 'J', 'G', 'Q', 'B']);
-    stacks.push(vec!['Z', 'W', 'M', 'S', 'C', 'D', 'J']);
+    // transpose supply rows to get stacks
+    supply_rows.reverse();
 
+    let stacks = transpose(supply_rows);
+
+    // de-option vector using flatten trick
+    let stacks = stacks
+        .into_iter()
+        .map(|x| x.into_iter().flatten().collect::<Vec<_>>())
+        .collect::<Vec<Vec<_>>>();
 
     // parse instructions
     for line in contents.lines().skip(10) {
@@ -132,6 +176,21 @@ fn parse_input(file_path: &str) -> (Vec<Vec<char>>, Vec<Instruction>) {
     }
 
     (stacks, instructions)
+}
+
+
+fn transpose<T>(v: Vec<Vec<T>>) -> Vec<Vec<T>> {
+    assert!(!v.is_empty());
+    let len = v[0].len();
+    let mut iters: Vec<_> = v.into_iter().map(|n| n.into_iter()).collect();
+    (0..len)
+        .map(|_| {
+            iters
+                .iter_mut()
+                .map(|n| n.next().unwrap())
+                .collect::<Vec<T>>()
+        })
+        .collect()
 }
 
 
