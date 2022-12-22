@@ -1,26 +1,71 @@
+use std::borrow::Borrow;
 use std::cell::RefCell;
 use std::cmp::Ordering;
 use std::collections::VecDeque;
 use std::fmt::{Debug, Formatter};
 use std::fs;
-use std::rc::Rc;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::character::complete::{space0, space1};
+use nom::character::complete::{digit1, line_ending, newline, one_of, space0, space1};
 use nom::character::*;
-use nom::combinator::rest;
+use nom::error::Error;
 use nom::IResult;
+use nom::multi::separated_list1;
+use nom::sequence::tuple;
 
 
 pub fn solve_first_star() -> usize {
-    //let monkeys = parse_input("src/monkey_in_the_middle/input.txt");
+    let content = parse_input("src/monkey_in_the_middle/input.txt");
 
-    let mut monkeys = init_monkeys();
+    let mut monkeys;
+
+    if let Ok((_, m)) = separated_list1(line_ending, parse_monkey)(&content) {
+        monkeys = m;
+    } else {
+        panic!("Error: couldn't parse monkeys")
+    }
+
+    let relief = Box::new(|x: u64| x / 3);
+
+    // cycles
+    for _ in 0..20 {
+        for monkey in monkeys.iter() {
+            let tossed_items = monkey.borrow_mut().rummage(relief.clone());
+
+            for (item, dest) in tossed_items {
+                // assign items
+                monkeys[dest].borrow_mut().items.push_back(item);
+            }
+        }
+    }
+
+    monkeys.sort();
+
+
+    let ans = monkeys.pop().unwrap().borrow_mut().inspection_count *
+        monkeys.pop().unwrap().borrow_mut().inspection_count;
+
+    ans
+}
+
+
+pub fn solve_second_star() -> usize {
+    let content = parse_input("src/monkey_in_the_middle/input.txt");
+
+    let mut monkeys;
+
+    if let Ok((_, m)) = separated_list1(line_ending, parse_monkey)(&content) {
+        monkeys = m;
+    } else {
+        panic!("Error: couldn't parse monkeys")
+    }
+
+    let relief = Box::new(|x: u64| x % 9699690);
 
     // cycles
     for _ in 0..10000 {
         for monkey in monkeys.iter() {
-            let tossed_items = monkey.borrow_mut().rummage();
+            let tossed_items = monkey.borrow_mut().rummage(relief.clone());
 
             for (item, dest) in tossed_items {
                 // assign items
@@ -33,158 +78,10 @@ pub fn solve_first_star() -> usize {
     // 112221 correct answer
     monkeys.sort();
 
-    //dbg!(&monkeys);
-
     let ans = monkeys.pop().unwrap().borrow_mut().inspection_count *
         monkeys.pop().unwrap().borrow_mut().inspection_count;
 
-
-    // part 2
-    // 19335041548 too low
-    // 19337822658 too low
-    // 20069963890 too low
-    // 14402520108 too low (didn't submit)
-    // 14402880128 too low (didn't submit)
-    // 25272176808 (correct answer)
-
     ans
-}
-
-
-pub fn solve_second_star() -> usize {
-    //let instructions = parse_input("src/monkey_in_the_middle/input.txt");
-
-    // Trick
-    // As far as I know, there are no general shortcuts besides reducing the
-    // terms of the product before multiplying. I will emphasize that by reduction,
-    // I mean picking the smallest representative mod m in absolute value.
-    // This may be a negative integer.
-
-    // https://en.wikipedia.org/wiki/Chinese_remainder_theorem
-
-    // modular multiplication
-
-    // https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/modular-multiplication
-    //
-
-    //
-
-
-
-
-    0
-}
-
-
-fn init_monkeys() -> Vec<RefCell<Monkey>> {
-    let mut result = Vec::new();
-
-    // Monkey 0
-    let m = Monkey {
-        items: VecDeque::from(vec![54, 98, 50, 94, 69, 62, 53, 85]),
-        inspection_count: 0,
-        //operation: Box::new(|old| (old % 3) * (13 % 3)),
-        operation: Box::new(|old| old * 13),
-        test: Box::new(|x| x % 3),
-        test_true: 2,
-        test_false: 1,
-    };
-
-    result.push(RefCell::new(m));
-
-    // Monkey 1
-    let m = Monkey {
-        items: VecDeque::from(vec![71, 55, 82]),
-        inspection_count: 0,
-        //operation: Box::new(|old| (old % 13) + (2 % 13)),
-        operation: Box::new(|old| old + 2),
-        test: Box::new(|x| x % 13),
-        test_true: 7,
-        test_false: 2,
-    };
-
-    result.push(RefCell::new(m));
-
-    // Monkey 2
-    let m = Monkey {
-        items: VecDeque::from(vec![77, 73, 86, 72, 87]),
-        inspection_count: 0,
-        //operation: Box::new(|old| (old % 19) + (8 % 19)),
-        operation: Box::new(|old| old + 8),
-        test: Box::new(|x| x % 19),
-        test_true: 4,
-        test_false: 7,
-    };
-
-    result.push(RefCell::new(m));
-
-    // Monkey 3
-    let m = Monkey {
-        items: VecDeque::from(vec![97, 91]),
-        inspection_count: 0,
-        //operation: Box::new(|old| (old % 17) + (1 % 17)),
-        operation: Box::new(|old| old + 1),
-        test: Box::new(|x| x % 17),
-        test_true: 6,
-        test_false: 5,
-    };
-
-    result.push(RefCell::new(m));
-
-    // Monkey 4
-    let m = Monkey {
-        items: VecDeque::from(vec![78, 97, 51, 85, 66, 63, 62]),
-        inspection_count: 0,
-        //operation: Box::new(|old| (old % 5) * (17 % 5)),
-        operation: Box::new(|old| old * 17),
-        test: Box::new(|x| x % 5),
-        test_true: 6,
-        test_false: 3,
-    };
-
-    result.push(RefCell::new(m));
-
-    // Monkey 5
-    let m = Monkey {
-        items: VecDeque::from(vec![88]),
-        inspection_count: 0,
-        //operation: Box::new(|old| (old % 7) + (3 % 7)),
-        operation: Box::new(|old| old + 3),
-        test: Box::new(|x| x % 7),
-        test_true: 1,
-        test_false: 0,
-    };
-
-    result.push(RefCell::new(m));
-
-    // Monkey 6
-    let m = Monkey {
-        items: VecDeque::from(vec![87, 57, 63, 86, 87, 53]),
-        inspection_count: 0,
-        //operation: Box::new(|old| (old % 11) * (old % 11)),
-        operation: Box::new(|old| old * old),
-        test: Box::new(|x| x % 11),
-        test_true: 5,
-        test_false: 0,
-    };
-
-    result.push(RefCell::new(m));
-
-    // Monkey 7
-    let m = Monkey {
-        items: VecDeque::from(vec![73, 59, 82, 65]),
-        inspection_count: 0,
-        //operation: Box::new(|old| (old % 2) + (6 % 2)),
-        operation: Box::new(|old| old + 6),
-        test: Box::new(|x| x % 2),
-        test_true: 4,
-        test_false: 3,
-    };
-
-    result.push(RefCell::new(m));
-
-
-    result
 }
 
 
@@ -193,8 +90,8 @@ struct Monkey {
     inspection_count: usize,
     operation: Box<dyn Fn(u64) -> u64>,
     test: Box<dyn Fn(u64) -> u64>,
-    test_true: usize,
-    test_false: usize,
+    true_dest: usize,
+    false_dest: usize,
 }
 
 impl Debug for Monkey {
@@ -202,8 +99,8 @@ impl Debug for Monkey {
         f.debug_struct("Monkey")
             .field("items", &self.items)
             .field("inspection_count", &self.inspection_count)
-            .field("test_true", &self.test_true)
-            .field("test_false", &self.test_false)
+            .field("test_true", &self.true_dest)
+            .field("test_false", &self.false_dest)
             .finish()
     }
 }
@@ -230,28 +127,32 @@ impl PartialEq for Monkey {
 }
 
 impl Monkey {
-    fn inspect_item(&mut self) -> Option<(u64, usize)> {
+    fn inspect_item<F>(&mut self, relief: F) -> Option<(u64, usize)> where
+        F: Fn(u64) -> u64 {
         if let Some(item) = self.items.pop_front() {
             self.inspection_count += 1;
 
             let worry_level = (self.operation)(item);
-            let worry_level = worry_level % 9699690;
+            //let worry_level = worry_level % 9699690;
 
-            if (self.test)(worry_level) == 0 {
-                Some((worry_level, self.test_true))
+            let relieved_worry = relief(worry_level);
+
+            if (self.test)(relieved_worry) == 0 {
+                Some((relieved_worry, self.true_dest))
             } else {
-                Some((worry_level, self.test_false))
+                Some((relieved_worry, self.false_dest))
             }
         } else {
             None
         }
     }
 
-    fn rummage(&mut self) -> Vec<(u64, usize)> {
+    fn rummage<F>(&mut self, relief: F) -> Vec<(u64, usize)> where
+        F: Fn(u64) -> u64 {
         let mut result = Vec::new();
 
         while !self.items.is_empty() {
-            if let Some(tossed_item) = self.inspect_item() {
+            if let Some(tossed_item) = self.inspect_item(relief.borrow()) {
                 result.push(tossed_item);
             }
         }
@@ -261,167 +162,133 @@ impl Monkey {
 }
 
 
-#[derive(Debug, Eq, PartialEq)]
-enum Instruction {
-    Noop,
-    Addx(i32),
+fn parse_monkey(input: &str) -> IResult<&str, RefCell<Monkey>> {
+    // Sample input:
+    // Monkey 0:
+    //      Starting items: 79, 98
+    //      Operation: new = old * 19
+    //      Test: divisible by 23
+    //          If true: throw to monkey 2
+    //          If false: throw to monkey 3
+
+    let (rest, _) = tuple((space0, tag("Monkey "), digit1, tag(":"), line_ending))(input)?;
+    let (rest, items) = parse_starting_items(rest)?;
+    let (rest, operation) = parse_operation(rest)?;
+    let (rest, test) = parse_divisible_test(rest)?;
+    let (rest, true_dest) = parse_test_if_true(rest)?;
+    let (rest, false_dest) = parse_test_if_false(rest)?;
+
+    let m = Monkey {
+        items,
+        operation,
+        test,
+        true_dest,
+        false_dest,
+        inspection_count: 0,
+    };
+
+    Ok((rest, RefCell::new(m)))
 }
 
-#[derive(Debug, PartialEq, Eq)]
-struct Cpu {
-    cycle: usize,
-    regx: i32,
-    crt: Crt,
-}
-
-#[derive(Debug, PartialEq, Eq)]
-struct Crt {
-    screen: [char; 240],
-}
-
-impl Cpu {
-    fn default() -> Self {
-        Cpu {
-            cycle: 0,
-            regx: 1,
-            crt: Crt::default(),
-        }
-    }
-
-    fn process_instruction(&mut self, instr: Instruction) -> Option<i32> {
-        let mut result: Option<i32> = None;
-
-        match instr {
-            Instruction::Noop => {
-                self.cycle += 1;
-                self.crt.write_pixel(self.cycle, self.regx);
-                result = self.emit_signal_strength()
-            }
-            Instruction::Addx(val) => {
-                self.cycle += 1;
-                self.crt.write_pixel(self.cycle, self.regx);
-                result = self.emit_signal_strength();
-                self.cycle += 1;
-                self.crt.write_pixel(self.cycle, self.regx);
-                if result.is_none() {
-                    result = self.emit_signal_strength();
-                }
-                self.regx += val;
-            }
-        }
-
-        result
-    }
-
-    fn emit_signal_strength(&self) -> Option<i32> {
-        if self.cycle < 20 {
-            None
-        } else if (self.cycle - 20) % 40 == 0 {
-            // emit signal strength
-            Some(self.cycle as i32 * self.regx)
-        } else {
-            None
-        }
-    }
-}
-
-
-impl Crt {
-    fn default() -> Self {
-        Crt {
-            screen: ['.'; 240]
-        }
-    }
-
-    fn write_pixel(&mut self, cycle: usize, regex: i32) {
-        let sprite = [regex - 1, regex, regex + 1];
-
-        // normalise crt x pos
-        let crt_x = (cycle - 1) % 40;
-
-        if sprite.contains(&(crt_x as i32)) {
-            self.screen[cycle - 1] = '#';
-        } else {
-            self.screen[cycle - 1] = '.';
-        }
-    }
-
-    fn render(&self) {
-        for i in 0..240 {
-            if i % 40 == 0 {
-                print!("\n");
-            }
-            print!("{}", self.screen[i]);
-        }
-    }
-}
-
-
-fn parse_noop(input: &str) -> IResult<&str, Instruction> {
+fn parse_starting_items(input: &str) -> IResult<&str, VecDeque<u64>> {
+    // Starting items: 79, 98
     let (rest, _) = space0(input)?;
-    let (rest, _) = tag("noop")(rest)?;
+    let (rest, _) = tag("Starting items: ")(rest)?;
+    let (rest, list) = separated_list1(tag(", "), complete::u64)(rest)?;
+    let (rest, _) = line_ending(rest)?;
+
+    Ok((rest, VecDeque::from(list)))
+}
+
+fn parse_operation(input: &str) -> IResult<&str, Box<dyn Fn(u64) -> u64>> {
+    // Operation: new = old * 19
+    // Operation: new = old + 6
+    // Operation: new = old * old
+    let (rest, _) = space0(input)?;
+    let (rest, _) = tag("Operation: new = old ")(rest)?;
+    let (rest, op) = one_of("*+")(rest)?;
     let (rest, _) = space0(rest)?;
+    let (rest, term) = alt((tag("old"), digit1))(rest)?;
+    let (rest, _) = line_ending(rest)?;
 
-    Ok((rest, Instruction::Noop))
-}
+    let result: Box<dyn Fn(u64) -> u64>;
 
-
-fn parse_addx(input: &str) -> IResult<&str, Instruction> {
-    let (rest, _) = space0(input)?;
-    let (rest, _) = tag("addx")(rest)?;
-    let (rest, _) = space1(rest)?;
-    let (rest, val) = complete::i32(rest)?;
-
-    Ok((rest, Instruction::Addx(val)))
-}
-
-fn parse_items(input: &str) -> IResult<&str, Vec<u32>> {
-    let result = Vec::<u32>::new();
-
-    let (rest, _) = space0(input)?;
-    let (rest, _) = tag("addx")(rest)?;
-    let (rest, _) = space1(rest)?;
-    let (rest, val) = complete::i32(rest)?;
+    if term == "old" {
+        match op {
+            '+' => { result = Box::new(|old| old + old) }
+            '*' => { result = Box::new(|old| old * old) }
+            _ => { panic!("unknown operator") }
+        }
+    } else if let Ok((_, num)) = complete::u64::<_, Error<_>>(term) {
+        match op {
+            '+' => { result = Box::new(move |old| old + num) }
+            '*' => { result = Box::new(move |old| old * num) }
+            _ => { panic!("unknown operator") }
+        }
+    } else {
+        panic!("Couldn't parse term: {}", term);
+    }
 
     Ok((rest, result))
 }
 
-fn parse_item(input: &str) -> IResult<&str, u32> {
+fn parse_divisible_test(input: &str) -> IResult<&str, Box<dyn Fn(u64) -> u64>> {
+    //      Test: divisible by 23
     let (rest, _) = space0(input)?;
-    let (rest, _) = tag("addx")(rest)?;
-    let (rest, _) = space1(rest)?;
-    let (rest, val) = complete::i32(rest)?;
+    let (rest, _) = tag("Test: divisible by ")(rest)?;
+    let (rest, num) = digit1(rest)?;
+    let (rest, _) = line_ending(rest)?;
 
-    Ok((rest, 0))
+    let result: Box<dyn Fn(u64) -> u64>;
+
+    if let Ok((_, num)) = complete::u64::<_, Error<_>>(num) {
+        result = Box::new(move |x| x % num)
+    } else {
+        panic!("Error parsing divisible test number: {}", num);
+    }
+
+    Ok((rest, result))
+}
+
+fn parse_test_if_true(input: &str) -> IResult<&str, usize> {
+    //          If true: throw to monkey 2
+    let (rest, _) = space0(input)?;
+    let (rest, _) = tag("If true: throw to monkey ")(rest)?;
+    let (rest, num) = digit1(rest)?;
+    let (rest, _) = line_ending(rest)?;
+
+    let result;
+
+    if let Ok((_, num)) = complete::u64::<_, Error<_>>(num) {
+        result = num as usize;
+    } else {
+        panic!("Error: Couldn't parse test if true num {}", num);
+    }
+
+    Ok((rest, result))
+}
+
+fn parse_test_if_false(input: &str) -> IResult<&str, usize> {
+    //          If false: throw to monkey 3
+    let (rest, _) = space0(input)?;
+    let (rest, _) = tag("If false: throw to monkey ")(rest)?;
+    let (rest, num) = digit1(rest)?;
+    let (rest, _) = line_ending(rest)?;
+
+    let result;
+
+    if let Ok((_, num)) = complete::u64::<_, Error<_>>(num) {
+        result = num as usize;
+    } else {
+        panic!("Error: Couldn't parse test if false num {}", num);
+    }
+
+    Ok((rest, result))
 }
 
 
-fn parse_instruction(input: &str) -> Instruction {
-    let mut parser = alt((parse_noop, parse_addx));
-
-    let parsed_result = parser(input);
-
-    match parsed_result {
-        Ok((_, instruction)) => { instruction }
-        _ => { panic!("Unrecognised Instruction") }
-    }
-}
-
-
-fn parse_input(file_path: &str) -> Vec<Monkey> {
-    let content = fs::read_to_string(file_path).expect("Input file local to project");
-
-    let mut result = Vec::<Monkey>::new();
-
-    println!("{:?}", content);
-
-    // parse until Monkey (left parse struct, right continue)
-
-    for line in content.lines() {
-        //result.push(parse_instruction(line));
-    }
-
-    result
+fn parse_input(file_path: &str) -> String {
+    fs::read_to_string(file_path).expect("Input file local to project")
 }
 
 
