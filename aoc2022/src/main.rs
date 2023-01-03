@@ -1,3 +1,4 @@
+use crate::beacon_exclusion_zone::beacon_exclusion_zone_solution;
 use crate::calorie_counting::calorie_counting_solution;
 use crate::rock_paper_scissors::rock_paper_scissors_solution;
 use crate::rucksack_reorganisation::rucksack_reorganisation_solution;
@@ -11,6 +12,8 @@ use crate::cathode_ray_tube::cathode_ray_tube_solution;
 use crate::monkey_in_the_middle::monkey_in_the_middle_solution;
 use crate::hill_climbing::hill_climbing_solution;
 use crate::distress_signal::distress_signal_solution;
+use crate::proboscidea_volcanium::proboscidea_volcanium_solution;
+use crate::regolith_reservoir::regolith_reservoir_solution;
 
 
 mod calorie_counting;
@@ -26,6 +29,9 @@ mod cathode_ray_tube;
 mod monkey_in_the_middle;
 mod hill_climbing;
 mod distress_signal;
+mod regolith_reservoir;
+mod beacon_exclusion_zone;
+mod proboscidea_volcanium;
 
 
 fn main() {
@@ -43,5 +49,8 @@ fn main() {
     monkey_in_the_middle_solution();
     hill_climbing_solution();
     distress_signal_solution();
+    regolith_reservoir_solution();
+    beacon_exclusion_zone_solution();
+    proboscidea_volcanium_solution();
 
 }
