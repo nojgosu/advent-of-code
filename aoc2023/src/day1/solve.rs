@@ -3,7 +3,7 @@ use nom::bytes::complete::{tag, take};
 use nom::character::complete::{anychar, digit1};
 use nom::error::Error;
 use nom::{multi::many_till, IResult};
-use std::{fs};
+use std::fs;
 
 pub fn solve_first_star() -> i64 {
     let input = parse_first_star_input("src/day1/input.txt");
