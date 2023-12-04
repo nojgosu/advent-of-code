@@ -19,7 +19,7 @@ fn identify_part_numbers(symbols: Vec<Symbol>, numbers: Vec<Number>) -> Vec<usiz
     let symbol_locations: HashSet<Point> = symbols.iter().map(|s| s.location.clone()).collect();
 
     let mut part_numbers = Vec::<usize>::new();
-    
+
     numbers.iter().for_each(|num| {
         if num
             .proximate_points()
