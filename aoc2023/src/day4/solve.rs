@@ -3,7 +3,7 @@ use nom::character::complete::{digit1, space0};
 use nom::multi::{many0, many_till};
 use nom::sequence::terminated;
 use nom::IResult;
-use std::collections::{HashSet, VecDeque};
+use std::collections::{HashSet};
 use std::fs;
 
 pub fn solve_first_star() -> usize {
@@ -53,7 +53,7 @@ fn count_winning_cards(mut cards: Vec<ScratchCard>) -> usize {
         cards[i + 1..]
             .iter_mut()
             .take(winners)
-            .for_each(|x| x.copies += (copies * 1));
+            .for_each(|x| x.copies += copies * 1);
     }
 
     return cards.iter().fold(0_usize, |acc, x| acc + x.copies);
